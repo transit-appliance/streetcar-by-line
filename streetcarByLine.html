@@ -1,0 +1,480 @@
+<html>
+	<head>
+		<title>Transit Board(tm)</title>		
+	
+		<!--#config timefmt="%s" -->
+		<script src="../assets/js/trLoader.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
+		<script src="../assets/js/libraries/jquery-1.5.1.min.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
+		<script src="../assets/js/libraries/fleegix.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/libraries/tzdate.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/libraries/jquery-ui-1.8.7.custom.min.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
+		<script src="../assets/js/libraries/date.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/trArrUtilities.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
+		<script src="../assets/js/trStopCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/trAgencyCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/trArr.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/libraries/jquery.isotope.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="streetcarByLine.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/trCar2Go.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+
+		<link rel="stylesheet" href="../assets/fonts/DejuVu/stylesheet.css?ord=<!--#echo var="DATE_LOCAL" -->" type="text/css" />
+
+		
+		
+		<style>
+			
+			body { 
+				font-family: DejaVuSansBold, sans-serif; 
+				background-color: #FFFFFF; 
+				margin: 0px; 
+				border-width: 0px; 
+				cursor: none; 
+				width: 100%;
+				height: 100%;
+			}
+			
+			#tb_message { 
+				position: fixed; 
+				top: 0px; 
+				margin: 0px; 
+				border-width: 0px; 
+				padding: 0px; 
+				width: 100%; 
+			}
+			
+			#tb_top { 
+				margin: 0px; 
+				border-width: 0px; 
+				padding: 0px; 
+				width: 100%; 
+			}
+			
+			#tb_middle {
+				overflow: hidden;
+				height: 100%;
+				margin: 0px; 
+				border-width: 0px; 
+				padding: 0px; 
+				width: 100%; 
+			}
+			
+			#tb_middle.tb_empty {
+				background-image:url('../assets/images/noservice.jpg');
+				background-repeat:no-repeat;
+				/*background-attachment:fixed;*/
+				background-position: center top; 
+			}
+			
+			#tb_bottom { 
+				position: absolute;
+				bottom: 0px; 
+				margin: 0px; 
+				border-width: 0px; 
+				padding: 0px; 
+			}
+						
+			#arrivals_display_area { 
+				margin: 0px; 
+				border-width: 0px; 
+				padding: 0px 
+			} 
+			
+			table { border-width: 0px; border-style: none; width: 100%; border-collapse:collapse; padding: 0; margin: 0; font-family: Arial, sans-serif; }	
+			
+			h1 {
+				font-family: DejaVuSansBold, sans-serif; 
+				font-size: 26px;
+			} 
+			
+
+			
+			#arrivals_outer_wrapper {
+				position: relative;
+				padding: 0;
+				margin: 0;
+				border: 0;
+				min-height: 455px;
+			}
+			
+			#arrivals_inner_wrapper, #arrivals_inner_wrapper2 {
+				position: absolute;
+				padding: 0;
+				margin: 0;
+				border: 0;
+			}
+			
+			#tb_clock { 
+				font-family: DejaVuSansBold, sans-serif; 
+				font-weight: bold;
+				background-color: #000000; 
+				color: #FFFFFF;
+				padding-left: .5em;
+				padding-right: .5em;
+				padding-top: .2em;
+				padding-bottom: .1em;
+			}
+			#tb_ticker { 
+				background-color: #CCCCCC; 
+				width: 100%; 
+				font-weight: 
+				normal; 
+				overflow: hidden;
+				padding-top: .2em;
+				padding-bottom: .1em;
+			}
+			
+			.tb_misc {
+				font-size: 50%;
+			}
+			
+			div.scroller{
+				overflow:hidden;
+				height: 22px;
+				width: 100%;
+			}
+
+			div.scrollingtext{
+				position:absolute;
+				white-space:nowrap;
+			}
+
+
+			
+			div.trip_wrapper {
+				font-size: 16px;
+				padding: 0;
+				margin: 0;
+			}
+			div.trip {
+				font-size: 1em;
+				font-family: DejaVuSansCondensed, sans-serif;
+			  padding: .5em;
+			  margin: 0;
+			  clear: both;
+			}
+			
+			div.trip div.route_wrapper {
+				height: 3em;
+				margin-right: .2em;
+				background-color: white;
+			  border-top-left-radius: 8px;
+			  border-bottom-left-radius: 8px;
+			  border: .2em solid black;
+			  float: left;
+			}
+			div.trip div.route_wrapper div.route {
+				font-size: 2.6em;
+				padding-left: .2em;
+				padding-right: .2em;
+				font-family: DejaVuSansBold, sans-serif; 
+				font-weight: bold;
+				text-align: center;
+				width: 3em;
+			}
+			body.chumby div.trip div.route_wrapper div.route {
+				width: 2.6em;
+			}
+			div.trip div.destination_wrapper {
+				height: 3em;
+				background-color: white;
+			  border: .2em solid black;
+			  float: left;
+			  margin-right: .2em;
+			  margin-left: .2em;
+			  padding-right: .2em;
+			  padding-left: .2em;
+			  width: 2em;
+			  overflow: hidden;
+			}
+			div.trip table.destination {
+				font-family: DejaVuSansCondensed, sans-serif;
+				overflow: hidden;
+				font-size: 1em;
+				height: 3em;
+				padding: 0px;
+				
+			}
+			div.trip td {
+				font-family: DejaVuSansCondensed, sans-serif;
+				vertical-align: middle;
+				font-size: 1em;
+				font-weight: normal;
+				padding: 0;
+				margin: 0;
+			}
+			
+			div.trip td div.destination_inner {
+				font-weight: normal;
+			}
+			div.trip td div.destination_inner span.terminus {
+				font-family: DejaVuSansBold, sans-serif; 
+				font-weight: bold;
+				font-size: 1.2em;
+			}
+			
+			div.trip div.arrivals {
+				float: left;
+				height: 3em;
+				color: gold;
+				margin-left: .2em;
+				text-align: center;
+				width: 8em;
+				overflow: hidden;
+				background-color: #333;
+			  border: .2em solid #333;
+			}
+			
+			body.chumby div.trip div.arrivals {
+				width: 8em;
+			}
+
+
+			div.trip span.arrival_0 {
+				font-size: 1.6em;
+				font-weight: bold;
+				text-align: center;
+				clear: both;
+			}
+			
+			div.trip span.arrival_1 {
+				font-size: 1em;
+				margin-top: -0.2em;
+				font-weight: bold;
+				clear: both;
+				text-align: center;
+			}
+			
+			/* colors */
+			
+			div.trip.service_color_blue div.route_wrapper, 
+			div.trip.service_color_blue div.destination_wrapper {
+				background-color: #00C;
+				border-color: #00C;
+				color: white;
+			}
+			
+			div.trip.service_color_red div.route_wrapper, 
+			div.trip.service_color_red div.destination_wrapper {
+				background-color: #C00;
+				border-color: #C00;
+				color: white;
+			}
+			
+			div.trip.service_color_green div.route_wrapper, 
+			div.trip.service_color_green div.destination_wrapper {
+				background-color: #080;
+				border-color: #080;
+				color: white;
+			}
+			
+			div.trip.service_color_blue div.destination_wrapper div.destination_inner, 
+			div.trip.service_color_red div.destination_wrapper div.destination_inner, 
+			div.trip.service_color_green div.destination_wrapper div.destination_inner, 
+			div.trip.service_color_streetcar div.destination_wrapper div.destination_inner {
+				color: white;
+			}
+			
+			div.trip.service_color_yellow div.route_wrapper, 
+			div.trip.service_color_yellow div.destination_wrapper {
+				background-color: yellow;
+				border-color: yellow;
+			}
+			
+			div.trip.service_color_9 div.route_wrapper, 
+			div.trip.service_color_9 div.destination_wrapper {
+				background-color: #cccccc;
+				border-color: #cccccc;
+			}
+			
+			div.trip.service_color_streetcar div.route_wrapper, 
+			div.trip.service_color_streetcar div.destination_wrapper {
+				background-color: black;
+				color: white;
+			}
+			
+			.car2go {
+				float: left;
+				margin: 10px;
+				width: 651px;
+				height: 75px;
+				border-radius: 30px;
+				border-width: 6px;
+				border-style: solid;
+				border-color: #009BE0;
+			}
+			
+			.car2go table {
+				min-height: 69px;
+				width: 646px;
+				margin-top: 1px;
+				margin-bottom: 5px;
+				margin-left: 5px;
+			}
+			
+			.car2go table td.image img {
+				border-radius: 20px;
+			}
+			
+			.car2go table td.address {
+				font-size: 24px;
+				width: 370px;
+			}
+			
+			.car2go table td.address div {
+				max-height: 60px;
+				overflow: hidden;
+			}
+			
+			.car2go table td.dist {
+				font-size: 48px
+			}
+			
+			.sc_trip {
+				margin: 10px;
+				margin-bottom: 8px;
+				width: 651px;
+				height: 200px;
+				border-radius: 30px;
+				border-width: 6px;
+				border-style: solid;
+				border-color: #FF9933;
+			}
+			
+			.sc_trip.route_194 {
+				border-color: #FF6699;
+			}
+			
+			.sc_trip_destination {
+				width: 100%; 
+				height: 15%; 
+				clear: both; 
+				background-color: #FFB870; 
+				text-align: center; 
+				font-size: 28px; 
+				border-top-left-radius: 22px; 
+				border-top-right-radius: 22px;
+			}
+			
+			.sc_trip_arrival_row {
+				width: 100%; 
+				height: 70%; 
+				clear: both; 
+				background-color: white;
+			}
+			
+			.sc_trip_arrival_time {
+				float: left; 
+				width: 260px; 
+				padding-top: 20px;
+			}
+			
+			.sc_trip_arrival_first {
+				clear: both; 
+				text-align: center; 
+				font-size: 40px;
+			}
+
+			.sc_trip_arrival_second {
+				clear: both; 
+				text-align: center; 
+				font-size: 30px;
+			}
+			
+			.sc_trip_arrival_photo {
+				float: left; 
+				height: 100%; 
+				width: 391px;
+			}
+			
+			.sc_trip_arrival_origin {
+				width: 100%; 
+				height: 15%; 
+				clear: both; 
+				background-color: #FFB870; 
+				text-align: center; 
+				font-size: 28px; 
+				border-bottom-left-radius: 22px; 
+				border-bottom-right-radius: 22px;
+			}
+			
+			.route_194 .sc_trip_destination,
+			.route_194 .sc_trip_arrival_origin {
+				background-color: #FF99CC; 
+			}
+			
+			.isotope,
+			.isotope .isotope-item {
+			  /* change duration value to whatever you like */
+			  -webkit-transition-duration: 0.8s;
+			     -moz-transition-duration: 0.8s;
+			      -ms-transition-duration: 0.8s;
+			       -o-transition-duration: 0.8s;
+			          transition-duration: 0.8s;
+			}
+			
+			.isotope {
+			  -webkit-transition-property: height, width;
+			     -moz-transition-property: height, width;
+			      -ms-transition-property: height, width;
+			       -o-transition-property: height, width;
+			          transition-property: height, width;
+			}
+			
+			.isotope .isotope-item {
+			  -webkit-transition-property: -webkit-transform, opacity;
+			     -moz-transition-property:    -moz-transform, opacity;
+			      -ms-transition-property:     -ms-transform, opacity;
+			       -o-transition-property:         top, left, opacity;
+			          transition-property:         transform, opacity;
+			}
+			
+			/* scrolling transitions */
+			
+			#arrivals_outer_wrapper {
+			
+				transition-property: top;
+				transition-duration: 0s;
+				transition-timing-function: linear;
+				transition-delay: 0s;
+				/* Firefox 4 */
+				-moz-transition-property:top;
+				-moz-transition-duration:0s;
+				-moz-transition-timing-function:linear;
+				-moz-transition-delay:0s;
+				/* Safari and Chrome */
+				-webkit-transition-property:top;
+				-webkit-transition-duration:0s;
+				-webkit-transition-timing-function:linear;
+				-webkit-transition-delay:0s;
+			}
+			
+		</style>
+		
+
+		
+		<script>
+			
+			jQuery(document).ready(function() {
+				jQuery.noConflict();
+			  trArr({
+			  	applicationName: "Streetcar by Line",
+			  	applicationVersion: "1.01",
+			  	applicationId: "scbyline",
+  				assetsDir:	"../assets",
+			  	configString: window.location.search, // use the query string
+			  	displayInterval: 30*1000, //milliseconds
+			  	initializeCallback: streetcarByLine.initializePage,
+			  	displayCallback: streetcarByLine.displayPage
+			  });
+			});
+			
+		</script>
+	
+ 
+	</head>
+	
+	<body class="streetcarByLine">
+	</body>
+</html>
+
+ 
