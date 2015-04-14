@@ -243,7 +243,7 @@ streetcarByLine.initializePage = function(data) {
 		} else {
 			html+= '<td id="banner" width="100%" align="center">&nbsp;</td>';
 		}
-		html+= '<td><img width="390" height="120" src="../assets/images/streetcar_logo_printable_390x120.png"/></td>';
+		html+= '<td><img width="390" height="120" src="../assets/images/streetcar_logo.jpg"/></td>';
 		html += '\
 </tr></table>\
 		';
