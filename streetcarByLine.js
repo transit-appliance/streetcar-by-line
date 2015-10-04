@@ -528,6 +528,7 @@ streetcarByLine.displayPage = function(data, callback) {
 		if (by_trip[trip_key].arrivals[0].route_id == '193') {
 			destination = destination.replace("Streetcar To","NS Streetcar to");
 		}
+		destination = destination.replace("Portland Streetcar ","");
 		var photo_src = "../assets/images/streetcar_"+by_trip[trip_key].arrivals[0].route_id+"_"+by_trip[trip_key].arrivals[0].route_data.direction_id+".jpg";
 		var trip_inner = '<div class="sc_trip_destination">'+destination+'</div>';
 		trip_inner += '<div class="sc_trip_arrival_row">';
