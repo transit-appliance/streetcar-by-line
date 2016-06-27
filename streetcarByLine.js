@@ -516,6 +516,9 @@ streetcarByLine.displayPage = function(data, callback) {
 		by_trip_html += "<div class=\"trip_wrapper\" data-sortkey=\""+by_trip[trip_key].sort_key+"\"><div id=\""+trip_key+"\" class=\"sc_trip service_color_"+by_trip[trip_key].arrivals[0].app_color+" route_"+by_trip[trip_key].arrivals[0].route_id+" direction_"+by_trip[trip_key].arrivals[0].route_data.direction_id+"\" data-sortkey=\""+by_trip[trip_key].sort_key+"\">\n";
 		var first_arrival = streetcarByLine.formatted_arrival_time(by_trip[trip_key].arrivals[0])
 		var trip_arrival = "<div class=\"sc_trip_arrival_first\"><span style=\"font-size: 150%\">"+first_arrival.replace(" min","")+"</span> min</div>";
+		if (trip_arrival.match(/:/)) {
+			trip_arrival = "<div class=\"sc_trip_arrival_first\"><span style=\"font-size: 150%\">"+first_arrival+"</span></div>";
+		}
 		if (first_arrival == "Due") {
 			trip_arrival = "<div class=\"sc_trip_arrival_first\"><span style=\"font-size: 150%\">Due</span></div>";
 		}
