@@ -1,21 +1,21 @@
+<!doctype html>
 <html>
 	<head>
 		<title>Transit Board(tm)</title>		
 	
 		<!--#config timefmt="%s" -->
+		<script src="../assets/js/tracekit.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trLoader.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
-		<script src="../assets/js/libraries/jquery-1.11.0.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>		
-		<script src="../assets/js/libraries/jquery-migrate-1.2.1.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>		
+		<script src="../assets/js/libraries/jquery-1.11.0.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>			
 		<script src="../assets/js/libraries/jquery.jsonp.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/libraries/fleegix.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/libraries/tzdate.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
-		<script src="../assets/js/libraries/jquery-ui-1.8.7.custom.min.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
 		<script src="../assets/js/libraries/date.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trArrUtilities.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
 		<script src="../assets/js/trStopCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trAgencyCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trArr.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
-		<script src="../assets/js/libraries/jquery.isotope.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="../assets/js/libraries/isotope-3.0.1.pkgd.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="streetcarByLine.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trCar2Go.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 
@@ -476,9 +476,39 @@
 			
 			jQuery(document).ready(function() {
 				jQuery.noConflict();
+				
+				var handler_url = "http://transitappliance.com/cgi-bin/js_error.pl";
+				if (streetcarByLine.is_development) {
+					handler_url = "http://transitappliance.com/cgi-bin/js_error_dev.pl";
+				}
+					
+				TraceKit.report.subscribe(function (stackInfo) {   
+					var serialized_stack = JSON.stringify(stackInfo);
+					if (serialized_stack.match(/tracekit/)) {
+						// don't track self-referential tracekit errors
+					} else {
+						jQuery.ajax({
+						    url: handler_url,
+						    type: 'POST',
+						    data: {
+								  	applicationName: 			"Streetcar by Line",
+								  	applicationVersion: 	"1.04",
+								  	applicationId: 				"scbyline",
+								  	applianceId:					streetcarByLine.appliance_id || "Unassigned",
+						        browserUrl: 					window.location.href,
+						        codeFile:							stackInfo.url,
+						        message:							stackInfo.message,
+						        userAgent: 						navigator.userAgent,
+						        stackInfo: 						serialized_stack
+						    }
+						});
+					}
+				});
+	
+	
 			  trArr({
 			  	applicationName: "Streetcar by Line",
-			  	applicationVersion: "1.03",
+			  	applicationVersion: "1.04",
 			  	applicationId: "scbyline",
   				assetsDir:	"../assets",
 			  	configString: window.location.search, // use the query string
@@ -489,6 +519,7 @@
 			});
 			
 			// v1.02 - upgrade to jQuery 1.11.0
+			// v1.04 - upgrade to isotope 3.0.1
 			
 		</script>
 	

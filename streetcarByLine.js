@@ -212,8 +212,7 @@ streetcarByLine.initializePage = function(data) {
 	}
 	
 
-	jQuery("head").append(jQuery('\
-		<style>\
+	jQuery("head").append(jQuery('<style>\
 			#tb_bottom td { font-size: '+basic_text+';}\
 			h1 { font-size: '+large_text+'; margin-bottom: '+padding+'; }\
 			body { overflow: hidden }\
@@ -286,8 +285,7 @@ streetcarByLine.initializePage = function(data) {
 			
 		var destination_wrapper_width = jQuery("div.destination_wrapper").width() + streetcarByLine.target_width - actual_width;
 	
-		jQuery("head").append(jQuery('\
-			<style>\
+		jQuery("head").append(jQuery('<style>\
 				div.trip div.destination_wrapper { width: '+destination_wrapper_width+'px; }\
 			</style>\
 		'));
@@ -435,7 +433,7 @@ streetcarByLine.displayPage = function(data, callback) {
 		  layoutMode: 'masonry',  
 			getSortData : {
 			  sortkey : function ( $elem ) {
-			    return parseInt($elem.attr('data-sortkey'));
+			    return parseInt(jQuery($elem).attr('data-sortkey'));
 			  }
 			},
 			sortBy : 'sortkey'
@@ -566,6 +564,7 @@ streetcarByLine.displayPage = function(data, callback) {
 		if (removal_queue.length > 0) {
 			var id = removal_queue.shift();
 			jQuery('#arrivals_inner_wrapper').isotope( 'remove', jQuery("#"+id).parent() );
+			//jQuery("#"+id).parent().remove(); // for good measure, as Isotope seems to leave some elements around
 			process_removals();
 		} else {
 			process_insertions();
@@ -598,7 +597,26 @@ streetcarByLine.displayPage = function(data, callback) {
 		}
 	}
 	
+	if (false && insertion_queue.length > 0) {
+		console.log(new Date().toUTCString());
+		console.log("insertions:");
+		console.log(insertion_queue);
+	}
+		
+	
+	if (false && removal_queue.length > 0) {
+		console.log(new Date().toUTCString());
+		console.log("removals:");
+		console.log(removal_queue);
+	}
+	
 	process_removals();
+	
+	if (jQuery('#arrivals_inner_wrapper').children().length > 4) {
+		jQuery('#arrivals_inner_wrapper .sc_trip_destination').each(function(){
+			console.log(jQuery(this).text());
+		});
+	}
 	
 	streetcarByLine.connection_health = data.connectionHealth;
 	
@@ -613,36 +631,18 @@ streetcarByLine.displayPage = function(data, callback) {
 }
 
 function filter_queue(arrivalsQueue) {
-					
-	var now = localTime();
-	now = now.getTime(); //milliseconds since epoch				
+		
+	// filter out arrivals with headsign indicating NW 14th		
 	
 	var tmp_queue = [];
 	// removes everything before now and greater than 24 hours from now
 	for (var i = 0; i < arrivalsQueue.length; i++) {
-		var milliseconds_until_arrival = arrivalsQueue[i].arrivalTime - now;
-		if (milliseconds_until_arrival >= 0 && milliseconds_until_arrival <= 24*60*60*1000) {
+		if (!arrivalsQueue[i].headsign.match(/14th/)) {
 			tmp_queue.push(arrivalsQueue[i]);
 		}
 	}
 
-	// split rows into <= 60 min and > 60 min
-	var next_hour = [];
-	var later = [];
-	for (var i = 0; i < tmp_queue.length; i++) {
-		var milliseconds_until_arrival = tmp_queue[i].arrivalTime - now;
-		if (milliseconds_until_arrival <= streetcarByLine.minutes_limit*60*1000) {
-			next_hour.push(tmp_queue[i]);
-		} else {
-			later.push(tmp_queue[i]);
-		}
-	}
-
-	if (next_hour.length > 0) {
-		return next_hour;
-	} else {
-		return later;
-	}
+	return tmp_queue;
 
 }
 
