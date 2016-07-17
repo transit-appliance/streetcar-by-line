@@ -2,20 +2,35 @@
 <html>
 	<head>
 		<title>Transit Board(tm)</title>		
-	
+		
 		<!--#config timefmt="%s" -->
 		<script src="../assets/js/tracekit.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trLoader.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
 		<script src="../assets/js/libraries/jquery-1.11.0.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>			
+		<script src="../assets/js/libraries/jquery-migrate-1.2.1.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/libraries/jquery.jsonp.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/libraries/fleegix.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		
+		<script>     
+	    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+			var chrome_version = raw ? parseInt(raw[2], 10) : false;
+			//console.log(navigator.userAgent);
+	    //console.log("'"+chrome_version+"'");
+	    if (chrome_version >= 50) {
+	    	jQuery.getScript("../assets/js/libraries/isotope-3.0.1.pkgd.js");
+	    } else {
+	    	jQuery.getScript("../assets/js/libraries/jquery.isotope.js");
+	    }
+	    
+		</script>
+	
+
 		<script src="../assets/js/libraries/tzdate.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/libraries/date.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trArrUtilities.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>	
 		<script src="../assets/js/trStopCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trAgencyCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trArr.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
-		<script src="../assets/js/libraries/isotope-3.0.1.pkgd.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="streetcarByLine.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trCar2Go.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 
@@ -508,7 +523,7 @@
 	
 			  trArr({
 			  	applicationName: "Streetcar by Line",
-			  	applicationVersion: "1.04",
+			  	applicationVersion: "1.05",
 			  	applicationId: "scbyline",
   				assetsDir:	"../assets",
 			  	configString: window.location.search, // use the query string
@@ -520,6 +535,7 @@
 			
 			// v1.02 - upgrade to jQuery 1.11.0
 			// v1.04 - upgrade to isotope 3.0.1
+			// v1.05 - conditionally choose version of isotope
 			
 		</script>
 	

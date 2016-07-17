@@ -428,7 +428,8 @@ streetcarByLine.displayPage = function(data, callback) {
 		{
 		  // options
 		  animationEngine: 'best-available',
-		  transformsEnabled: !streetcarByLine.isChumby,
+		  //transformsEnabled: !streetcarByLine.isChumby,
+		  transformsEnabled: false,
 		  itemSelector : 'div.trip_wrapper',
 		  layoutMode: 'masonry',  
 			getSortData : {
