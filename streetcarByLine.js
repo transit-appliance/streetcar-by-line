@@ -115,7 +115,19 @@ streetcarByLine.initializePage = function(data) {
 				lng: data.optionsConfig.lng[0],
 				loc: 'portland',
 				consumer_key: 'TransitAppliance',
-				num_vehicles: 2
+				num_vehicles: 1
+			});
+		}
+	}
+	
+	if (data.optionsConfig != undefined && data.optionsConfig.lat != undefined && data.optionsConfig.lat[0] != undefined) {
+		if (data.optionsConfig.lng != undefined && data.optionsConfig.lng[0] != undefined) {
+			streetcarByLine.gbfs = 1;
+			streetcarByLine.bikes = new trGBFS({
+				lat: data.optionsConfig.lat[0],
+				lng: data.optionsConfig.lng[0],
+				loc: 'http://biketownpdx.socialbicycles.com/opendata/gbfs.json',
+				num_locations: 1
 			});
 		}
 	}
@@ -262,7 +274,7 @@ streetcarByLine.initializePage = function(data) {
 		html += '\
 	<div id="car2go">\
 		<div id="car2go0" class="car2go"><table><tr valign="middle"><td class="image"><img src="../assets/images/car2go/car2go_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
-		<div id="car2go1" class="car2go"><table><tr valign="middle"><td class="image"><img src="../assets/images/car2go/car2go_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
+		<div id="gbfs0" class="gbfs"><table><tr valign="middle"><td class="image"><img src="../assets/images/gbfs/gbfs_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
 	</div>\
 			';
 		}
@@ -421,6 +433,17 @@ streetcarByLine.displayPage = function(data, callback) {
 			address = address.replace("(","<br>(");
 			jQuery("#car2go"+index+" td.address").html("<div>"+address+"</div>");
 			jQuery("#car2go"+index+" td.dist").html(streetcarByLine.cars.format_distance(dist));
+		});
+	}
+	
+	if (streetcarByLine.gbfs) {
+		// update car2go
+		var vehicles = streetcarByLine.cars.get_vehicles();
+		var locations = streetcarByLine.bikes.get_locations();
+		jQuery.each(locations, function(index,value) {
+			var address = "BIKETOWN - "+value.name;
+			jQuery("#gbfs"+index+" td.address").html("<div>"+address+' ('+value.formatted_distance+')</div>');
+			jQuery("#gbfs"+index+" td.dist").html(value.num_bikes_available+" bikes");
 		});
 	}
 		
