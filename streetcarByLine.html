@@ -539,6 +539,28 @@
 					var serialized_stack = JSON.stringify(stackInfo);
 					if (serialized_stack.match(/tracekit/)) {
 						// don't track self-referential tracekit errors
+					} else if (stackInfo.message.match(/Timezone/i) || serialized_stack.match(/Timezone/i)){
+						jQuery.ajax({
+						    url: handler_url,
+						    type: 'POST',
+						    data: {
+								  	applicationName: 			"Streetcar by Line",
+								  	applicationVersion: 	"1.06",
+								  	applicationId: 				"scbyline",
+								  	applianceId:					streetcarByLine.appliance_id || "Unassigned",
+						        browserUrl: 					window.location.href,
+						        codeFile:							stackInfo.url,
+						        message:							"TZ1: Timezone error, restarting application: "+stackInfo.message,
+						        userAgent: 						navigator.userAgent,
+						        stackInfo: 						serialized_stack
+						    }
+						});
+						
+						setTimeout(function(){
+							// restart app
+							location.reload(true);
+						},2000);			
+						
 					} else {
 						jQuery.ajax({
 						    url: handler_url,
