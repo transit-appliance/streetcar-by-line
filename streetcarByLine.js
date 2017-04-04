@@ -424,15 +424,19 @@ streetcarByLine.displayPage = function(data, callback) {
 	if (streetcarByLine.car2go) {
 		// update car2go
 		var vehicles = streetcarByLine.cars.get_vehicles();
+		console.log(vehicles);
 		jQuery.each(vehicles, function(index,value) {
-			var dist = value[1];
-			if (dist < 0.1) {
-				dist = 0.1;
+			// test defined to deal with mime type error from car2go service
+			if (value != undefined) {
+				var dist = value[1];
+				if (dist < 0.1) {
+					dist = 0.1;
+				}
+				var address = value[0];
+				address = address.replace("(","<br>(");
+				jQuery("#car2go"+index+" td.address").html("<div>"+address+"</div>");
+				jQuery("#car2go"+index+" td.dist").html(streetcarByLine.cars.format_distance(dist));
 			}
-			var address = value[0];
-			address = address.replace("(","<br>(");
-			jQuery("#car2go"+index+" td.address").html("<div>"+address+"</div>");
-			jQuery("#car2go"+index+" td.dist").html(streetcarByLine.cars.format_distance(dist));
 		});
 	}
 	
