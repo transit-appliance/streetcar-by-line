@@ -424,7 +424,7 @@ streetcarByLine.displayPage = function(data, callback) {
 	if (streetcarByLine.car2go) {
 		// update car2go
 		var vehicles = streetcarByLine.cars.get_vehicles();
-		console.log(vehicles);
+
 		jQuery.each(vehicles, function(index,value) {
 			// test defined to deal with mime type error from car2go service
 			if (value != undefined) {
