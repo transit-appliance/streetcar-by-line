@@ -29,6 +29,7 @@ streetcarByLine.isChumby = navigator.userAgent.match(/QtEmb/) != null;
 streetcarByLine.animation_factor = 0.85; // arbitrary value to allow for pause time plus javascript processing time, will be dynamically adjusted
 streetcarByLine.messages = [];
 streetcarByLine.car2go = false;
+streetcarByLine.platform = "";
 
 streetcarByLine.standing_messages.push("<span>TransitBoard&trade; is a product of Portland Transport.</span>");
 streetcarByLine.standing_messages.push("<span>Learn more at http://transitappliance.com</span>");
@@ -75,7 +76,7 @@ streetcarByLine.resetMessageQueue = function() {
 		streetcarByLine.messages.push('<span style="font-weight: bold; color: red">'+streetcarByLine.service_messages[i]+'</span>');
 	}
 	var dimensions = jQuery(window).width()+"x"+jQuery(window).height()
-  streetcarByLine.messages.push("<span style=\"font-size: 60%\">["+streetcarByLine.appliance_id+" "+dimensions+" "+streetcarByLine.animation_factor+"]</span>");
+  streetcarByLine.messages.push("<span style=\"font-size: 60%\">["+streetcarByLine.appliance_id+" "+dimensions+" "+streetcarByLine.animation_factor+" "+streetcarByLine.platform+"]</span>");
 }
 
 streetcarByLine.advanceMessage = function() {
@@ -179,6 +180,10 @@ streetcarByLine.initializePage = function(data) {
 		}
 		// create a ping (to keep internet connections open) every specified number of seconds
 		streetcarByLine.ping();
+	}
+	
+	if (data.optionsConfig.platform != undefined && data.optionsConfig.platform[0] != undefined) {
+		streetcarByLine.platform = data.optionsConfig.platform[0];
 	}
 	
 	// add stylesheet
