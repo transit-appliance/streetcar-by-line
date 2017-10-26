@@ -430,24 +430,28 @@ streetcarByLine.displayPage = function(data, callback) {
 		// update car2go
 		var vehicles = streetcarByLine.cars.get_vehicles();
 
-		jQuery.each(vehicles, function(index,value) {
-			// test defined to deal with mime type error from car2go service
-			if (value != undefined) {
-				var dist = value[1];
-				if (dist < 0.1) {
-					dist = 0.1;
-				}
-				var address = value[0];
-				address = address.replace("(","<br>(");
-				jQuery("#car2go"+index+" td.address").html("<div>"+address+"</div>");
-				jQuery("#car2go"+index+" td.dist").html(streetcarByLine.cars.format_distance(dist));
-			}
-		});
+    if (vehicles.length == 0) {
+    	jQuery("#car2go td.address").html("<div></div>");
+			jQuery("#car2go  td.dist").html("");
+    } else {
+  		jQuery.each(vehicles, function(index,value) {
+  			// test defined to deal with mime type error from car2go service
+  			if (value != undefined) {
+  				var dist = value[1];
+  				if (dist < 0.1) {
+  					dist = 0.1;
+  				}
+  				var address = value[0];
+  				address = address.replace("(","<br>(");
+  				jQuery("#car2go"+index+" td.address").html("<div>"+address+"</div>");
+  				jQuery("#car2go"+index+" td.dist").html(streetcarByLine.cars.format_distance(dist));
+  			}
+  		});
+  	}
 	}
 	
 	if (streetcarByLine.gbfs) {
-		// update car2go
-		var vehicles = streetcarByLine.cars.get_vehicles();
+		// update GBFS
 		var locations = streetcarByLine.bikes.get_locations();
 		jQuery.each(locations, function(index,value) {
 			var address = "BIKETOWN - "+value.name;

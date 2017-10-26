@@ -31,9 +31,9 @@
 		<script src="../assets/js/trStopCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trAgencyCache.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trArr.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
-		<script src="streetcarByLine.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trCar2Go.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 		<script src="../assets/js/trGBFS.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
+		<script src="streetcarByLine.js?ord=<!--#echo var="DATE_LOCAL" -->"></script>
 
 		<link rel="stylesheet" href="../assets/fonts/DejuVu/stylesheet.css?ord=<!--#echo var="DATE_LOCAL" -->" type="text/css" />
 
@@ -558,13 +558,13 @@
 					var serialized_stack = JSON.stringify(stackInfo);
 					if (serialized_stack.match(/tracekit/)) {
 						// don't track self-referential tracekit errors
-					} else if (stackInfo.message.match(/Timezone/i) || serialized_stack.match(/Timezone/i)){
+					} else if (stackInfo.message.match(/Timezone/i)){
 						jQuery.ajax({
 						    url: handler_url,
 						    type: 'POST',
 						    data: {
 								  	applicationName: 			"Streetcar by Line",
-								  	applicationVersion: 	"1.06",
+								  	applicationVersion: 	"1.07",
 								  	applicationId: 				"scbyline",
 								  	applianceId:					streetcarByLine.appliance_id || "Unassigned",
 						        browserUrl: 					window.location.href,
@@ -586,7 +586,7 @@
 						    type: 'POST',
 						    data: {
 								  	applicationName: 			"Streetcar by Line",
-								  	applicationVersion: 	"1.06",
+								  	applicationVersion: 	"1.07",
 								  	applicationId: 				"scbyline",
 								  	applianceId:					streetcarByLine.appliance_id || "Unassigned",
 						        browserUrl: 					window.location.href,
@@ -602,7 +602,7 @@
 	
 			  trArr({
 			  	applicationName: "Streetcar by Line",
-			  	applicationVersion: "1.06",
+			  	applicationVersion: "1.07",
 			  	applicationId: "scbyline",
   				assetsDir:	"../assets",
 			  	configString: window.location.search, // use the query string
@@ -616,6 +616,7 @@
 			// v1.04 - upgrade to isotope 3.0.1
 			// v1.05 - conditionally choose version of isotope
 			// v1.06 - add bikeshare
+			// v1.07 - updates for better car2go tracking
 			
 		</script>
 	
