@@ -110,6 +110,7 @@ streetcarByLine.initializePage = function(data) {
 	
 	if (data.optionsConfig != undefined && data.optionsConfig.lat != undefined && data.optionsConfig.lat[0] != undefined) {
 		if (data.optionsConfig.lng != undefined && data.optionsConfig.lng[0] != undefined) {
+		  /*
 			streetcarByLine.car2go = true;
 			streetcarByLine.cars = new trCar2Go({
 				lat: data.optionsConfig.lat[0],
@@ -118,6 +119,7 @@ streetcarByLine.initializePage = function(data) {
 				consumer_key: 'TransitAppliance',
 				num_vehicles: 1
 			});
+			*/
 		}
 	}
 	
@@ -128,7 +130,7 @@ streetcarByLine.initializePage = function(data) {
 				lat: data.optionsConfig.lat[0],
 				lng: data.optionsConfig.lng[0],
 				loc: 'http://biketownpdx.socialbicycles.com/opendata/gbfs.json',
-				num_locations: 1
+				num_locations: 2
 			});
 		}
 	}
@@ -275,11 +277,11 @@ streetcarByLine.initializePage = function(data) {
 		</div>\
 	</div>\
 		';
-	if (streetcarByLine.car2go) {
+	if (true || streetcarByLine.car2go) {
 		html += '\
 	<div id="car2go">\
-		<div id="car2go0" class="car2go"><table><tr valign="middle"><td class="image"><img src="../assets/images/car2go/car2go_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
 		<div id="gbfs0" class="gbfs"><table><tr valign="middle"><td class="image"><img src="../assets/images/gbfs/gbfs_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
+		<div id="gbfs1" class="gbfs"><table><tr valign="middle"><td class="image"><img src="../assets/images/gbfs/gbfs_vehicle.jpg" style="height: 69px"></td><td class="address"></td><td class="dist"></td></tr></table></div>\
 	</div>\
 			';
 		}
